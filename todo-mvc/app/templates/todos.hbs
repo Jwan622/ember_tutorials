@@ -1,0 +1,7 @@
+<p>
+  this is the app/templates/todos.hbs.
+</p>
+{{todo-input action="createTodo"}}
+{{#todo-list todos=model}}
+    {{outlet}}
+{{/todo-list}}

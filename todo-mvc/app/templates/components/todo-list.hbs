@@ -1,0 +1,31 @@
+<p>
+  this is the app/templates/components/todo-list.hbs
+</p>
+
+<section id="main">
+  <!-- this yield will yield to the todos/index.hbs which will load all the todos. When that is done, then this checkbox loads. -->
+  {{yield}}
+
+  <input type="checkbox" id="toggle-all">
+</section>
+
+<footer id="footer">
+    <span id="todo-count">
+        <strong>2</strong> todos left
+    </span>
+    <ul id="filters">
+        <li>
+            <a href="all" class="selected">All</a>
+        </li>
+        <li>
+            <a href="active">Active</a>
+        </li>
+        <li>
+            <a href="completed">Completed</a>
+        </li>
+    </ul>
+
+    <button id="clear-completed">
+        Clear completed (1)
+    </button>
+</footer>

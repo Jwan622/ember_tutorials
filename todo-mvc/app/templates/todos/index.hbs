@@ -1,0 +1,9 @@
+<p>
+  this is the app/templates/todos/index.hbs
+</p>
+<ul id="todo-list">
+    {{#each model as |todo|}}
+         <!-- this loads the component todo-item and passes in a todo as todo -->
+        {{todo-item todo=todo}}
+    {{/each}}
+</ul>

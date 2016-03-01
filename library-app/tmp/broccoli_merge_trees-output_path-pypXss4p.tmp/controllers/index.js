@@ -1,0 +1,1 @@
+/Users/Jwan/Dropbox/programming/ember/library-app/app/controllers/index.js

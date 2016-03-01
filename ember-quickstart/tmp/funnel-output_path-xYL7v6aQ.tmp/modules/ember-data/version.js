@@ -1,0 +1,1 @@
+/Users/Jwan/Dropbox/programming/ember/ember-quickstart/tmp/creator-output_path-02vifpO4.tmp/version.js
