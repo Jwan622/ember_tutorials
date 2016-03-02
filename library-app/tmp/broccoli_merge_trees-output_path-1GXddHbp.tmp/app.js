@@ -1,1 +1,0 @@
-/Users/Jwan/Dropbox/programming/ember/library-app/app/app.js

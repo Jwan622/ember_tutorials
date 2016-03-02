@@ -54,6 +54,16 @@ define('library-app/components/library-item-form', ['exports', 'ember'], functio
 define('library-app/components/library-item', ['exports', 'ember'], function (exports, _ember) {
   exports['default'] = _ember['default'].Component.extend({});
 });
+define('library-app/components/nav-link-to', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = _ember['default'].LinkComponent.extend({
+    tagName: 'li'
+  });
+});
+define('library-app/components/number-box', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = _ember['default'].Component.extend({
+    classNames: ['panel', 'panel-warning']
+  });
+});
 define('library-app/controllers/array', ['exports', 'ember'], function (exports, _ember) {
   exports['default'] = _ember['default'].Controller;
 });
@@ -265,6 +275,20 @@ define("library-app/instance-initializers/ember-data", ["exports", "ember-data/-
     initialize: _emberDataPrivateInstanceInitializersInitializeStoreService["default"]
   };
 });
+define('library-app/models/author', ['exports', 'ember-data'], function (exports, _emberData) {
+  exports['default'] = _emberData['default'].Model.extend({
+    name: _emberData['default'].attr('string'),
+    books: _emberData['default'].hasMany('book')
+  });
+});
+define('library-app/models/book', ['exports', 'ember-data'], function (exports, _emberData) {
+  exports['default'] = _emberData['default'].Model.extend({
+    title: _emberData['default'].attr('string'),
+    releaseYear: _emberData['default'].attr('date'),
+    library: _emberData['default'].belongsTo('library'),
+    author: _emberData['default'].belongsTo('author')
+  });
+});
 define('library-app/models/contact', ['exports', 'ember-data'], function (exports, _emberData) {
   exports['default'] = _emberData['default'].Model.extend({
     email: _emberData['default'].attr('string'),
@@ -287,7 +311,7 @@ define('library-app/models/library', ['exports', 'ember-data'], function (export
     name: _emberData['default'].attr('string'),
     address: _emberData['default'].attr('string'),
     phone: _emberData['default'].attr('string'),
-
+    books: _emberData['default'].hasMany('books'),
     isValid: Ember.computed.notEmpty('name')
   });
 });
@@ -307,6 +331,7 @@ define('library-app/router', ['exports', 'ember', 'library-app/config/environmen
     this.route('admin', function () {
       this.route('invitations');
       this.route('contacts');
+      this.route('seeder');
     });
 
     this.route('libraries', function () {
@@ -341,6 +366,23 @@ define('library-app/routes/admin/invitations', ['exports', 'ember'], function (e
           invitation.destroyRecord();
         }
       }
+    }
+  });
+});
+define('library-app/routes/admin/seeder', ['exports', 'ember'], function (exports, _ember) {
+  exports['default'] = _ember['default'].Route.extend({
+    model: function model() {
+      return _ember['default'].RSVP.hash({
+        libraries: this.store.findAll('library'),
+        books: this.store.findAll('book'),
+        authors: this.store.findAll('author')
+      });
+    },
+
+    setupController: function setupController(controller, model) {
+      controller.set('libraries', model.libraries);
+      controller.set('books', model.books);
+      controller.set('authors', model.authors);
     }
   });
 });
@@ -847,6 +889,84 @@ define("library-app/templates/admin/invitations", ["exports"], function (exports
     };
   })());
 });
+define("library-app/templates/admin/seeder", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": ["multiple-nodes"]
+        },
+        "revision": "Ember@2.3.1",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 8,
+            "column": 0
+          }
+        },
+        "moduleName": "library-app/templates/admin/seeder.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h1");
+        var el2 = dom.createTextNode("Seeder, our Data Center");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "row");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "col-md-4");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "col-md-4");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2, "class", "col-md-4");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [2]);
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [1]), 0, 0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [3]), 0, 0);
+        morphs[2] = dom.createMorphAt(dom.childAt(element0, [5]), 0, 0);
+        return morphs;
+      },
+      statements: [["inline", "number-box", [], ["title", "Libraries", "number", ["subexpr", "@mut", [["get", "libraries.length", ["loc", [null, [4, 62], [4, 78]]]]], [], []]], ["loc", [null, [4, 24], [4, 80]]]], ["inline", "number-box", [], ["title", "Authors", "number", ["subexpr", "@mut", [["get", "authors.length", ["loc", [null, [5, 60], [5, 74]]]]], [], []]], ["loc", [null, [5, 24], [5, 76]]]], ["inline", "number-box", [], ["title", "Books", "number", ["subexpr", "@mut", [["get", "books.length", ["loc", [null, [6, 58], [6, 70]]]]], [], []]], ["loc", [null, [6, 24], [6, 72]]]]],
+      locals: [],
+      templates: []
+    };
+  })());
+});
 define("library-app/templates/application", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template((function () {
     return {
@@ -1194,6 +1314,116 @@ define("library-app/templates/components/library-item", ["exports"], function (e
         return morphs;
       },
       statements: [["content", "item.name", ["loc", [null, [3, 32], [3, 45]]]], ["content", "item.address", ["loc", [null, [6, 20], [6, 36]]]], ["content", "item.phone", ["loc", [null, [7, 18], [7, 32]]]], ["content", "yield", ["loc", [null, [10, 6], [10, 15]]]]],
+      locals: [],
+      templates: []
+    };
+  })());
+});
+define("library-app/templates/components/nav-link-to", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.1",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 0
+          }
+        },
+        "moduleName": "library-app/templates/components/nav-link-to.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("a");
+        dom.setAttribute(el1, "href", "");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]), 0, 0);
+        return morphs;
+      },
+      statements: [["content", "yield", ["loc", [null, [1, 11], [1, 20]]]]],
+      locals: [],
+      templates: []
+    };
+  })());
+});
+define("library-app/templates/components/number-box", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template((function () {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.1",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 5,
+            "column": 0
+          }
+        },
+        "moduleName": "library-app/templates/components/number-box.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1, "class", "panel-heading");
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h3");
+        dom.setAttribute(el2, "class", "text-center");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n  ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h1");
+        dom.setAttribute(el2, "class", "text-center");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode("\n");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [1]), 0, 0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [3]), 0, 0);
+        return morphs;
+      },
+      statements: [["content", "title", ["loc", [null, [2, 26], [2, 35]]]], ["inline", "if", [["get", "number", ["loc", [null, [3, 31], [3, 37]]]], ["get", "number", ["loc", [null, [3, 38], [3, 44]]]], "..."], [], ["loc", [null, [3, 26], [3, 52]]]]],
       locals: [],
       templates: []
     };
@@ -2170,11 +2400,11 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
             "source": null,
             "start": {
               "line": 15,
-              "column": 12
+              "column": 8
             },
             "end": {
               "line": 15,
-              "column": 64
+              "column": 36
             }
           },
           "moduleName": "library-app/templates/navbar.hbs"
@@ -2185,10 +2415,7 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("a");
-          dom.setAttribute(el1, "href", "");
-          var el2 = dom.createTextNode("Home");
-          dom.appendChild(el1, el2);
+          var el1 = dom.createTextNode("Home");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -2209,11 +2436,11 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
             "source": null,
             "start": {
               "line": 16,
-              "column": 12
+              "column": 8
             },
             "end": {
               "line": 16,
-              "column": 65
+              "column": 45
             }
           },
           "moduleName": "library-app/templates/navbar.hbs"
@@ -2224,10 +2451,7 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("a");
-          dom.setAttribute(el1, "href", "");
-          var el2 = dom.createTextNode("About");
-          dom.appendChild(el1, el2);
+          var el1 = dom.createTextNode("Libraries");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -2248,11 +2472,11 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
             "source": null,
             "start": {
               "line": 17,
-              "column": 12
+              "column": 8
             },
             "end": {
               "line": 17,
-              "column": 73
+              "column": 37
             }
           },
           "moduleName": "library-app/templates/navbar.hbs"
@@ -2263,10 +2487,7 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("a");
-          dom.setAttribute(el1, "href", "");
-          var el2 = dom.createTextNode("Libraries");
-          dom.appendChild(el1, el2);
+          var el1 = dom.createTextNode("About");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -2287,11 +2508,11 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
             "source": null,
             "start": {
               "line": 18,
-              "column": 12
+              "column": 8
             },
             "end": {
               "line": 18,
-              "column": 69
+              "column": 41
             }
           },
           "moduleName": "library-app/templates/navbar.hbs"
@@ -2302,10 +2523,7 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("a");
-          dom.setAttribute(el1, "href", "");
-          var el2 = dom.createTextNode("Contact");
-          dom.appendChild(el1, el2);
+          var el1 = dom.createTextNode("Contact");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -2326,11 +2544,11 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
             "source": null,
             "start": {
               "line": 25,
-              "column": 18
+              "column": 16
             },
             "end": {
               "line": 25,
-              "column": 89
+              "column": 63
             }
           },
           "moduleName": "library-app/templates/navbar.hbs"
@@ -2341,10 +2559,79 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("a");
-          dom.setAttribute(el1, "href", "");
-          var el2 = dom.createTextNode("Invitations");
-          dom.appendChild(el1, el2);
+          var el1 = dom.createTextNode("Invitations");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() {
+          return [];
+        },
+        statements: [],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child6 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.1",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 26,
+              "column": 16
+            },
+            "end": {
+              "line": 26,
+              "column": 57
+            }
+          },
+          "moduleName": "library-app/templates/navbar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("Contacts");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() {
+          return [];
+        },
+        statements: [],
+        locals: [],
+        templates: []
+      };
+    })();
+    var child7 = (function () {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.1",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 27,
+              "column": 16
+            },
+            "end": {
+              "line": 27,
+              "column": 53
+            }
+          },
+          "moduleName": "library-app/templates/navbar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("Seeder");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -2369,7 +2656,7 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
             "column": 0
           },
           "end": {
-            "line": 32,
+            "line": 34,
             "column": 0
           }
         },
@@ -2439,19 +2726,19 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("ul");
         dom.setAttribute(el4, "class", "nav navbar-nav");
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n        ");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
@@ -2484,7 +2771,15 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("ul");
         dom.setAttribute(el6, "class", "dropdown-menu");
-        var el7 = dom.createTextNode("\n                  ");
+        var el7 = dom.createTextNode("\n                ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n                ");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        var el7 = dom.createTextNode("\n                ");
         dom.appendChild(el6, el7);
         var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
@@ -2518,18 +2813,21 @@ define("library-app/templates/navbar", ["exports"], function (exports) {
         var element0 = dom.childAt(fragment, [0, 1]);
         var element1 = dom.childAt(element0, [3]);
         var element2 = dom.childAt(element1, [1]);
-        var morphs = new Array(6);
+        var element3 = dom.childAt(element1, [3, 1, 3]);
+        var morphs = new Array(8);
         morphs[0] = dom.createMorphAt(dom.childAt(element0, [1]), 3, 3);
         morphs[1] = dom.createMorphAt(element2, 1, 1);
         morphs[2] = dom.createMorphAt(element2, 3, 3);
         morphs[3] = dom.createMorphAt(element2, 5, 5);
         morphs[4] = dom.createMorphAt(element2, 7, 7);
-        morphs[5] = dom.createMorphAt(dom.childAt(element1, [3, 1, 3]), 1, 1);
+        morphs[5] = dom.createMorphAt(element3, 1, 1);
+        morphs[6] = dom.createMorphAt(element3, 3, 3);
+        morphs[7] = dom.createMorphAt(element3, 5, 5);
         return morphs;
       },
-      statements: [["block", "link-to", ["index"], ["class", "navbar-brand"], 0, null, ["loc", [null, [10, 6], [10, 70]]]], ["block", "link-to", ["index"], ["tagName", "li"], 1, null, ["loc", [null, [15, 12], [15, 76]]]], ["block", "link-to", ["about"], ["tagName", "li"], 2, null, ["loc", [null, [16, 12], [16, 77]]]], ["block", "link-to", ["libraries"], ["tagName", "li"], 3, null, ["loc", [null, [17, 12], [17, 85]]]], ["block", "link-to", ["contact"], ["tagName", "li"], 4, null, ["loc", [null, [18, 12], [18, 81]]]], ["block", "link-to", ["admin.invitations"], ["tagName", "li"], 5, null, ["loc", [null, [25, 18], [25, 101]]]]],
+      statements: [["block", "link-to", ["index"], ["class", "navbar-brand"], 0, null, ["loc", [null, [10, 6], [10, 70]]]], ["block", "nav-link-to", ["index"], [], 1, null, ["loc", [null, [15, 8], [15, 52]]]], ["block", "nav-link-to", ["libraries"], [], 2, null, ["loc", [null, [16, 8], [16, 61]]]], ["block", "nav-link-to", ["about"], [], 3, null, ["loc", [null, [17, 8], [17, 53]]]], ["block", "nav-link-to", ["contact"], [], 4, null, ["loc", [null, [18, 8], [18, 57]]]], ["block", "nav-link-to", ["admin.invitations"], [], 5, null, ["loc", [null, [25, 16], [25, 79]]]], ["block", "nav-link-to", ["admin.contacts"], [], 6, null, ["loc", [null, [26, 16], [26, 73]]]], ["block", "nav-link-to", ["admin.seeder"], [], 7, null, ["loc", [null, [27, 16], [27, 69]]]]],
       locals: [],
-      templates: [child0, child1, child2, child3, child4, child5]
+      templates: [child0, child1, child2, child3, child4, child5, child6, child7]
     };
   })());
 });
