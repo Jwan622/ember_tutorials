@@ -1,0 +1,8 @@
+{
+  "firebase": "embertutorialjeffwa",
+  "public": "dist",
+  "rewrites": [{
+    "source": "**",
+    "destination": "/index.html"
+  }]
+}

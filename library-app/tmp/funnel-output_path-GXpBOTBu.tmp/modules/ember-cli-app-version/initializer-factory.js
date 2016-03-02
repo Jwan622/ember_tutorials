@@ -1,1 +1,0 @@
-/Users/Jwan/Dropbox/programming/ember/library-app/tmp/funnel-input_base_path-jLO2LzzB.tmp/0/initializer-factory.js
