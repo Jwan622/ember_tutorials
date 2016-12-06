@@ -1,5 +1,5 @@
 (function() {
-/* globals define, Ember, DS, jQuery */
+/* globals define, Ember, jQuery */
 
   function processEmberShims() {
     var shims = {
@@ -104,7 +104,8 @@
         'send':           Ember.sendEvent
       },
       'ember-metal/get': {
-        'default': Ember.get
+        'default': Ember.get,
+        'getProperties': Ember.getProperties
       },
       'ember-metal/mixin': {
         'default': Ember.Mixin
@@ -128,6 +129,7 @@
         'assert':       Ember.assert,
         'cacheFor':     Ember.cacheFor,
         'copy':         Ember.copy,
+        'guidFor':      Ember.guidFor
       },
       'ember-object': {
         'default': Ember.Object
@@ -239,24 +241,6 @@
       'use strict';
 
       return values;
-    });
-  }
-
-  function generateLazyModule(namespace, name, globalName) {
-    define(name, [], function() {
-      'use strict';
-
-      var exportObject = {};
-
-      if (typeof globalName === 'object') {
-        for (var i = 0, l = globalName.length; i < l; i++) {
-          exportObject[globalName[i]] = window[namespace][globalName[i]];
-        }
-      } else {
-        exportObject['default'] = (globalName !== '') ? window[namespace][globalName] : window[namespace];
-      }
-
-      return exportObject;
     });
   }
 

@@ -4,15 +4,21 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'library-app',
     environment: environment,
-    contentSecurityPolicy: { 'connect-src': "'self' https://auth.firebase.com wss://*.firebaseio.com" },
-    firebase: 'https://embertutorialjeffwa.firebaseio.com/',
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       }
+    },
+
+    firebase: {
+      apiKey: "AIzaSyARA2Mn832t8l-1FOCTDFRvfxEi0NlfFec",
+      authDomain: "embertutorialyo.firebaseapp.com",
+      databaseURL: "https://embertutorialyo.firebaseio.com",
+      storageBucket: "embertutorialyo.appspot.com",
+      messagingSenderId: "306690405939"
     },
 
     APP: {
@@ -31,7 +37,6 @@ module.exports = function(environment) {
 
   if (environment === 'test') {
     // Testem prefers this...
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
 
     // keep test console output quieter
