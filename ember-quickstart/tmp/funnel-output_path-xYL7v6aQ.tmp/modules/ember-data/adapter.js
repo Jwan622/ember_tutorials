@@ -1,1 +1,0 @@
-/Users/Jwan/Dropbox/programming/ember/ember-quickstart/node_modules/ember-data/addon/adapter.js

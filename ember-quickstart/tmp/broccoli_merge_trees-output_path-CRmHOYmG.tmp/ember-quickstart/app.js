@@ -1,1 +1,0 @@
-/Users/Jwan/Dropbox/programming/ember/ember-quickstart/app/app.js

@@ -1,1 +1,0 @@
-/Users/Jwan/Dropbox/programming/ember/ember-quickstart/tmp/funnel-input_base_path-krMu2IvJ.tmp/0/app.js

@@ -1,1 +1,0 @@
-/Users/Jwan/Dropbox/programming/ember/ember-quickstart/tmp/broccoli_merge_trees-input_base_path-lNDUc6Pk.tmp/12/initializers/export-application-global.js
